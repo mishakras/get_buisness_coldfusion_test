@@ -1,0 +1,8 @@
+<cfparam name="ideeventinfo">
+
+<cfset requestProcessor = createObject("component","framework.RequestProcessor") >
+	
+<cfset requestInfo = requestProcessor.parseRequest(#ideeventinfo#)>
+
+<!--- Add your handler logic here --->
+<cfdump var="#requestInfo#">

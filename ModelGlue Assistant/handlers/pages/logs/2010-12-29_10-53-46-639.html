@@ -1,0 +1,52 @@
+struct
+
+Detail: ColdFusion attempted looking in the tree of installed custom tags but did not find a custom tag with this name. If you are using per-application custom tag mappings, ensure that per-application settings are enabled by the administrator.
+Message: Cannot find CFML template for custom tag page.
+StackTrace: coldfusion.tagext.lang.ModuleTag$CannotOpenCfmlException: Cannot find CFML template for custom tag page.
+	at coldfusion.tagext.lang.ModuleTag.setName(ModuleTag.java:96)
+	at coldfusion.tagext.lang.CustomTag.setName(CustomTag.java:34)
+	at cfupdate2ecfm747248206.runPage(/Users/simon/Sites/ModelGlueExtension/trunk/handlers/pages/update.cfm:7)
+	at coldfusion.runtime.CfJspPage.invoke(CfJspPage.java:231)
+	at coldfusion.tagext.lang.IncludeTag.doStartTag(IncludeTag.java:416)
+	at coldfusion.filter.CfincludeFilter.invoke(CfincludeFilter.java:65)
+	at coldfusion.filter.ApplicationFilter.invoke(ApplicationFilter.java:360)
+	at coldfusion.filter.RequestMonitorFilter.invoke(RequestMonitorFilter.java:48)
+	at coldfusion.filter.MonitoringFilter.invoke(MonitoringFilter.java:40)
+	at coldfusion.filter.PathFilter.invoke(PathFilter.java:94)
+	at coldfusion.filter.ExceptionFilter.invoke(ExceptionFilter.java:70)
+	at coldfusion.filter.BrowserDebugFilter.invoke(BrowserDebugFilter.java:79)
+	at coldfusion.filter.ClientScopePersistenceFilter.invoke(ClientScopePersistenceFilter.java:28)
+	at coldfusion.filter.BrowserFilter.invoke(BrowserFilter.java:38)
+	at coldfusion.filter.NoCacheFilter.invoke(NoCacheFilter.java:46)
+	at coldfusion.filter.GlobalsFilter.invoke(GlobalsFilter.java:38)
+	at coldfusion.filter.DatasourceFilter.invoke(DatasourceFilter.java:22)
+	at coldfusion.filter.CachingFilter.invoke(CachingFilter.java:62)
+	at coldfusion.CfmServlet.service(CfmServlet.java:200)
+	at coldfusion.bootstrap.BootstrapServlet.service(BootstrapServlet.java:89)
+	at jrun.servlet.FilterChain.doFilter(FilterChain.java:86)
+	at coldfusion.monitor.event.MonitoringServletFilter.doFilter(MonitoringServletFilter.java:42)
+	at coldfusion.bootstrap.BootstrapFilter.doFilter(BootstrapFilter.java:46)
+	at jrun.servlet.FilterChain.doFilter(FilterChain.java:94)
+	at jrun.servlet.FilterChain.service(FilterChain.java:101)
+	at jrun.servlet.ServletInvoker.invoke(ServletInvoker.java:106)
+	at jrun.servlet.JRunInvokerChain.invokeNext(JRunInvokerChain.java:42)
+	at jrun.servlet.JRunRequestDispatcher.invoke(JRunRequestDispatcher.java:286)
+	at jrun.servlet.ServletEngineService.dispatch(ServletEngineService.java:543)
+	at jrun.servlet.jrpp.JRunProxyService.invokeRunnable(JRunProxyService.java:203)
+	at jrunx.scheduler.ThreadPool$ThreadThrottle.invokeRunnable(ThreadPool.java:428)
+	at jrunx.scheduler.WorkerThread.run(WorkerThread.java:66)
+TagContext:  
+	[array]
+	1) [struct]
+		COLUMN: 0
+		ID: CFCUSTOM
+		LINE: 7
+		RAW_TRACE: at cfupdate2ecfm747248206.runPage(/Users/simon/Sites/ModelGlueExtension/trunk/handlers/pages/update.cfm:7)
+		TEMPLATE: /Users/simon/Sites/ModelGlueExtension/trunk/handlers/pages/update.cfm
+		TYPE: CFML 
+Type: Expression
+tagName: page
+ 
+ 
+************************************************************************************ 
+

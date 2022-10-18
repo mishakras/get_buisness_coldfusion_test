@@ -1,0 +1,38 @@
+<application>
+	<name>ActionScript Class Generator</name>
+	
+	<author>Adobe</author>
+	<version>1.0</version>
+	<email></email>	
+	<description>(1) Generate AS Class File from DB table 
+	             (2) Generate AS Class File from an ORM CFC (specify Datasource, incase ORM CFC properties dont have datatype information specified )
+				 (3) Generate AS Class File from Ordinary (non-ORM) CFC (DataSource mandatory) 
+				 Note: You can also include the AIR-CF Offline suport feature's Metadata tags using this code generator</description>	
+    <menucontributions >
+	    <contribution target="rdsview" >
+	       <menu name="Generate AS Class from DB Table">
+	    		<action name="Generate AS Class" handlerid="DB_AS" >
+					<input name="location" label="Enter location" tooltip="Location where generated CFCs will be stored" type="dir"/>			
+					<input name="includemetadata" label="Include AS Metadata tags" tooltip="Include tags like [RemoteClass],[Id] etc..." type="boolean"/>	
+					<input name="remotecfcmapping" label="RemoteClass Alias" tooltip="Use Dot Notation from wwwroot. This will be Ignored if Above IncludeMetaData flag is disabled" type="string"/>
+					<input name="packagename" label="Package Name" tooltip="Package Name for the AS Class File(Use Dot Notation)" type="string"/>
+         		</action>
+        	</menu>
+        </contribution>
+		<contribution target="projectview" >
+	       <menu name="Generate AS Class from CFC">
+	    		<action name="Generate AS Class" handlerid="CFC_AS" >
+					<input name="location" label="Enter location (*)" tooltip="Location where generated CFCs will be stored" type="dir"/>			
+                    <input name="packagename" label="Package Name" tooltip="Package Name for the AS Class File(Use Dot Notation)" type="string"/>
+					<input name="includemetadata" label="Include [RemoteClass] Metadata" tooltip="Include AS metadata [RemoteClass]" type="boolean"/>
+					<input name="includecfairmetadata" label="Include CF-AIR Offline Metadata" tooltip="Include tags like [Entity],[Id] etc..." type="boolean"/>	
+					<input name="cfdatasource" label="CF DataSource (MouseOver for Info)" tooltip="DataSource is required only if CFC doent has DataType Information for Properties" type="string"/>
+         		</action>
+        	</menu>
+        </contribution>
+    </menucontributions>	
+	<handlers>
+		<handler id="DB_AS" type="CFM" filename="DB_ASClassGenerator.cfm" />
+		<handler id="CFC_AS" type="CFM" filename="CFC_ASClassGenerator.cfm" />
+	</handlers>
+</application>

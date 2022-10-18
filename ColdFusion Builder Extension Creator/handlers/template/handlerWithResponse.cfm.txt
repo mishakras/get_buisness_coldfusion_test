@@ -1,0 +1,21 @@
+<cfheader name="Content-Type" value="text/xml">
+
+<cfparam name="ideeventinfo">
+
+<cflock name="$$ApplicationLockName$$" timeout="2">
+	<cfset application.appId = application.appId + 1>
+	<cfset appUid = application.appId>
+</cflock>
+
+<cfset application[#appUid#] = ideeventinfo>
+
+<cfset nextUrl = Session.utilComp.generateURL("$$HelperTemplateName$$")>
+<cfset nextUrl = nextUrl & "?genId=" & #appUid#>
+
+<cfoutput >
+	<response status="success" showResponse="true" >
+		<ide url="#nextUrl#" >
+    		<dialog height="$$DialogHeight$$" width="$$DialogWidth$$" title="$$DialogTitle$$" $$DialogCloseHandler$$ />
+		</ide>
+	</response>
+</cfoutput>
