@@ -15,6 +15,7 @@ user_password nvarchar(20) NOT NULL
 CREATE TABLE errors
 (
 number int IDENTITY PRIMARY KEY,
+created date NOT NULL,
 short_desc nvarchar(60) NOT NULL,
 full_desc nvarchar(500) NOT NULL,
 user_id int NOT NULL,
@@ -28,7 +29,7 @@ CREATE TABLE error_history
 (
 id int IDENTITY PRIMARY KEY, 
 error_id int NOT NULL, 
-created datetime NOT NULL UNIQUE,
+created date NOT NULL,
 error_action nvarchar(50) NOT NULL,
 comment nvarchar(100) NOT NULL,
 user_id int NOT NULL,

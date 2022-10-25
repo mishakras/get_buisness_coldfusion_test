@@ -5,10 +5,12 @@
 		<cfargument name="error_time_available" type="string" required="true" />
 		<cfargument name="error_critical" type="string" required="true" />
 		<cfset id_of_user = Val(session.stLoggedInUser.userID) />
+		<cfset database_date = CREATEODBCDATETIME(Now()) />
 		<cftry>
 			<cfquery name=insert_error>
 				INSERT INTO [get_buisness_coldfusion_test].[dbo].[errors]
-				           (short_desc
+				           (created
+				           ,short_desc
 				           ,full_desc
 				           ,user_id
 				           ,error_status
@@ -17,6 +19,7 @@
 				     OUTPUT INSERTED.number
 				     VALUES
 					 (
+					 	<cfqueryparam value="#database_date#" cfsqltype="CF_SQL_DATE" />,
 						<cfqueryparam value="#arguments.short_desc#" cfsqltype="cf_sql_varchar"/>,
 						<cfqueryparam value="#arguments.full_desc#" cfsqltype="cf_sql_varchar" />,
 						<cfqueryparam value="#id_of_user#" cfsqltype="CF_SQL_INTEGER" />,
@@ -25,7 +28,6 @@
 						<cfqueryparam value="#arguments.error_critical#" cfsqltype="cf_sql_varchar" />
 					 )
 			</cfquery>
-			<cfset database_datatime = CREATEODBCDATETIME(Now()) />
 			<cfquery>
 				INSERT INTO [get_buisness_coldfusion_test].[dbo].[error_history]
 				           (error_id
@@ -33,14 +35,13 @@
 				           ,error_action
 				           ,comment
 				           ,user_id)
-				     OUTPUT INSERTED.number
 				     VALUES
 					 (
 						<cfqueryparam value="#insert_error.number#" cfsqltype="CF_SQL_INTEGER"/>,
-						<cfqueryparam value="#database_datatime#" cfsqltype="cf_sql_datetime" />,
-						<cfqueryparam value="Ввод" cfsqltype="cf_sql_varchar" />,
+						<cfqueryparam value="#database_date#" cfsqltype="CF_SQL_DATE" />,
+						<cfqueryparam value="Ввод ошибки" cfsqltype="cf_sql_varchar" />,
 						<cfqueryparam value="Создано пользователем #id_of_user#" cfsqltype="cf_sql_varchar" />,
-						<cfqueryparam value="#id_of_user#" cfsqltype="cf_sql_varchar" />,
+						<cfqueryparam value="#id_of_user#" cfsqltype="cf_sql_varchar" />
 					 )
 			</cfquery>
 		<cfcatch type="database">
