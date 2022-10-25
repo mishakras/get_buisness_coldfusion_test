@@ -1,5 +1,4 @@
-<cfprocessingdirective pageEncoding="UTF-8">
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+﻿<cfprocessingdirective pageEncoding="UTF-8">
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -21,10 +20,15 @@
 			<td>
 				<a href='/users/users.cfm'>Список пользователей</a>
 			</td>
-			
+			<cfif IsDefined('session.stLoggedInUser')>
 			<td>
-				<a href=''>Список пользователей</a>
+				<a href='/users/logout.cfm'>Выйти из системы</a>
 			</td>
+			<cfelse>
+			<td>
+				<a href='/users/login.cfm'>Войти в систему</a>
+			</td>
+			</cfif>
 		</tr>
 	</div>
 	</body>

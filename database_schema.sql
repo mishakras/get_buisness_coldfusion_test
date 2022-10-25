@@ -14,8 +14,7 @@ user_password nvarchar(20) NOT NULL
 
 CREATE TABLE errors
 (
-id int IDENTITY PRIMARY KEY, 
-number int NOT NULL UNIQUE,
+number int IDENTITY PRIMARY KEY,
 short_desc nvarchar(60) NOT NULL,
 full_desc nvarchar(500) NOT NULL,
 user_id int NOT NULL,
@@ -29,10 +28,10 @@ CREATE TABLE error_history
 (
 id int IDENTITY PRIMARY KEY, 
 error_id int NOT NULL, 
-created date NOT NULL UNIQUE,
+created datetime NOT NULL UNIQUE,
 error_action nvarchar(50) NOT NULL,
 comment nvarchar(100) NOT NULL,
 user_id int NOT NULL,
-FOREIGN KEY (error_id) REFERENCES errors(id),
+FOREIGN KEY (error_id) REFERENCES errors(number),
 FOREIGN KEY (user_id) REFERENCES users(id)
 );

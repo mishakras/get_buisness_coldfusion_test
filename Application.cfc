@@ -8,6 +8,7 @@
 	<!---OnApplicationStart() method--->
 	<cffunction name="onApplicationStart" returntype="boolean" >
 		<cfset application.userService = createObject("component",'services.userService') />
+		<cfset application.errorService = createObject("component",'services.errorService') />
 		<cfreturn true />
 	</cffunction>
 	<!---onRequestStart() method--->

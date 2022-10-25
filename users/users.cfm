@@ -5,7 +5,7 @@
   	FROM [get_buisness_coldfusion_test].[dbo].[users]
 </cfquery>
 <cfoutput>
-	<cfinclude template="../Menu_component.cfc" >
+	<cfinclude template="../menu_component.cfm" >
 </cfoutput>
 <table>
 	<cfoutput query="allUsers">
