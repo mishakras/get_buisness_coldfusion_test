@@ -30,7 +30,7 @@
 			<dd><cfinput name="fld_error_time_available" id="fld_error_time_available" required="true" message="Введите срочность ошибки в форме" validateAt="onSubmit" /></dd>
 			<dt><label for="error_critical">Критичность ошибки</label></dt>
 			<dd><cfinput name="error_critical" id="error_critical" required="true" message="Введите критичность ошибки в форме" validateAt="onSubmit" /></dd>
-
+		</dl>
 		<input type="submit" name="fld_error_createSubmit" id="fld_error_createSubmit" value="Создать новую ошибку" />
 	</fieldset>
 </cfform>

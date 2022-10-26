@@ -64,8 +64,9 @@
 		<cftry>
 			<cfquery name = "got_User">
 				SELECT id
-					   ,user_name
-					   ,last_name
+					  ,login
+					  ,user_name
+					  ,last_name
 				FROM [get_buisness_coldfusion_test].[dbo].[users]
 				WHERE user_login = <cfqueryparam value="#arguments.user_login#" cfsqltype="cf_sql_varchar"/> 
 				AND user_password = <cfqueryparam value="#arguments.user_password#" cfsqltype="cf_sql_varchar" />
@@ -77,10 +78,20 @@
 		<cfif got_User.recordCount EQ 0>
 			<cfreturn 'Wrong login or password'/>
 		</cfif>
-		<cfset session.stLoggedInUser = {'userFirstName' = got_User.user_name, 'userLastName' = got_User.last_name, 'userID' = got_User.id} />
+		<cfset session.stLoggedInUser = {'user_name' = got_User.user_name, 'user_last_name' = got_User.last_name, 'userID' = got_User.id, 'user_login' = got_User.login} />
 		<cfreturn 'You logged in succsesfully'/>
 	</cffunction>
 	<cffunction name="doLogout" access="public" output="false" returntype="void">
 		<cfset structdelete(session,'stLoggedInUser') />
+	</cffunction>
+	<cffunction name="get_all_users" access="public" output="false" returntype="query">
+		<cfquery name="allUsers">
+			SELECT id 
+			  ,user_login
+		      ,user_name
+		      ,last_name
+		  	FROM [get_buisness_coldfusion_test].[dbo].[users]
+		</cfquery>
+		<cfreturn allUsers />
 	</cffunction>
 </cfcomponent>

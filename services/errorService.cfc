@@ -39,7 +39,7 @@
 					 (
 						<cfqueryparam value="#insert_error.number#" cfsqltype="CF_SQL_INTEGER"/>,
 						<cfqueryparam value="#database_date#" cfsqltype="CF_SQL_DATE" />,
-						<cfqueryparam value="Ввод ошибки" cfsqltype="cf_sql_varchar" />,
+						<cfqueryparam value="Ввод" cfsqltype="cf_sql_varchar" />,
 						<cfqueryparam value="Создано пользователем #id_of_user#" cfsqltype="cf_sql_varchar" />,
 						<cfqueryparam value="#id_of_user#" cfsqltype="cf_sql_varchar" />
 					 )
@@ -72,29 +72,82 @@
 		</cfif>
 		<cfreturn aErrorMessages />
 	</cffunction>
-	<cffunction name="doLogin" access="public" output="false" returntype="String">
-		<cfargument name="user_login" type="string" required="true" />
-		<cfargument name="user_password" type="string" required="true" />
+	<cffunction name="get_all_errors" access="public" output="false" returntype="query">
+		<cfquery name="allErrors">
+			SELECT number
+		      ,short_desc
+		      ,error_status
+		      ,error_time_available
+		      ,error_critical
+		  	FROM [get_buisness_coldfusion_test].[dbo].[errors]
+		</cfquery>
+		<cfreturn allErrors />
+	</cffunction>
+	<cffunction name="get_error_by_number" access="public" output="false" returntype="query">
+		<cfargument name="error_number" type="string" required="true" />
+		<cfset int_error_number = Val(error_number) />
+		<cfquery name="error_and_history">
+			SELECT errors.number
+			  ,errors.created
+		      ,errors.short_desc
+		      ,errors.full_desc
+		      ,errors.error_status
+		      ,errors.error_time_available
+		      ,errors.error_critical
+		      ,error_history.error_action
+		      ,error_history.comment
+		      ,error_history.user_id
+		  	FROM [get_buisness_coldfusion_test].[dbo].[errors] 
+		  	INNER JOIN [get_buisness_coldfusion_test].[dbo].[error_history] ON errors.number = error_history.error_id
+		  	WHERE errors.number = <cfqueryparam value="#int_error_number#" cfsqltype="CF_SQL_INTEGER"/>
+		</cfquery>
+		<cfreturn error_and_history />
+	</cffunction>
+	<cffunction name="change_error_status" access="public" output="false" returntype="array">
+		<cfargument name="error_number" type="string" required="true" />
+		<cfargument name="comment" type="string" required="true" />
+		<cfargument name="new_status" type="string" required="true" />
+		<cfset id_of_user = Val(session.stLoggedInUser.userID) />
+		<cfset int_error_number = Val(error_number) />
+		<cfset database_date = CREATEODBCDATETIME(Now()) />
+		<cfset var aErrorMessages = arrayNew(1) />
+		<cfif new_status EQ "Открытая">
+			<cfset action = "Открытие" />
+		</cfif>
+		<cfif new_status EQ "Решенная">
+			<cfset action = "Решение" />
+		</cfif>
+		<cfif new_status EQ "Закрытая">
+			<cfset action = "Закрытие" />
+		</cfif>
 		<cftry>
-			<cfquery name = "got_User">
-				SELECT id
-					   ,user_name
-					   ,last_name
-				FROM [get_buisness_coldfusion_test].[dbo].[users]
-				WHERE user_login = <cfqueryparam value="#arguments.user_login#" cfsqltype="cf_sql_varchar"/> 
-				AND user_password = <cfqueryparam value="#arguments.user_password#" cfsqltype="cf_sql_varchar" />
+			<cfquery>
+				INSERT INTO [get_buisness_coldfusion_test].[dbo].[error_history]
+				           (error_id
+				           ,created
+				           ,error_action
+				           ,comment
+				           ,user_id)
+				     VALUES
+					 (
+						<cfqueryparam value="#int_error_number#" cfsqltype="CF_SQL_INTEGER"/>,
+						<cfqueryparam value="#database_date#" cfsqltype="CF_SQL_DATE" />,
+						<cfqueryparam value="#action#" cfsqltype="cf_sql_varchar" />,
+						<cfqueryparam value="#comment#" cfsqltype="cf_sql_varchar" />,
+						<cfqueryparam value="#id_of_user#" cfsqltype="cf_sql_varchar" />
+					 )
 			</cfquery>
-	  	<cfcatch type="database">
-			<cfreturn #cfcatch.queryError#/>
+			<cfquery>
+				UPDATE [get_buisness_coldfusion_test].[dbo].[errors] 
+				   SET error_status = <cfqueryparam value="#new_status#" cfsqltype="cf_sql_varchar"/>
+		  		WHERE errors.number = <cfqueryparam value="#int_error_number#" cfsqltype="CF_SQL_INTEGER"/>
+			</cfquery>
+		<cfcatch type="database">
+			<cfset arrayAppend(aErrorMessages, "#cfcatch.queryError#")/>
+			<cfreturn aErrorMessages />
   		</cfcatch>
 		</cftry>
-		<cfif got_User.recordCount EQ 0>
-			<cfreturn 'Wrong login or password'/>
-		</cfif>
-		<cfset session.stLoggedInUser = {'userFirstName' = got_User.user_name, 'userLastName' = got_User.last_name, 'userID' = got_User.id} />
-		<cfreturn 'You logged in succsesfully'/>
-	</cffunction>
-	<cffunction name="doLogout" access="public" output="false" returntype="void">
-		<cfset structdelete(session,'stLoggedInUser') />
+		<cfset arrayAppend(aErrorMessages, "Изменение статуса успешно завершено")/>	
+		<cfreturn aErrorMessages />
 	</cffunction>
 </cfcomponent>

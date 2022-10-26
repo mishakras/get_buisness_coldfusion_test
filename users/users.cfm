@@ -1,18 +1,52 @@
-﻿<cfquery name="allUsers">
-	SELECT user_login
-      ,user_name
-      ,last_name
-  	FROM [get_buisness_coldfusion_test].[dbo].[users]
-</cfquery>
-<cfoutput>
+﻿<cfoutput>
 	<cfinclude template="../menu_component.cfm" >
 </cfoutput>
-<table>
-	<cfoutput query="allUsers">
-	  	<tr>
-			<td>#user_login#</td>
-			<td>#user_name#</td>
-			<td>#last_name#</td>
-	  	</tr>
-	</cfoutput>
-</table>
+<cfif isDefined('session.stLoggedInUser.userID')>
+	<cfif isDefined('form.fld_user_data_changeSubmit')>
+		<cfset variables.aErrorMessages = application.userService.changeUser(form.fld_Name, form.fld_Last_name) />
+	</cfif>
+	<cfset error_and_history = application.errorService.get_error_by_number(url.errorNumber)/>
+	<td>#session.stLoggedInUser.user_name#</td>
+	<td>#session.stLoggedInUser.user_last_name#</td>
+	<td>#session.stLoggedInUser.user_login#</td>
+	<cfform id="frm_user_register">
+		<fieldset>
+			<legend>Изменение данных о пользователе</legend>
+			<cfif isDefined('variables.aErrorMessages') AND NOT arrayIsEmpty(variables.aErrorMessages)>
+				<cfoutput>
+				<cfloop array="#variables.aErrorMessages#" index="message">
+					<p class=errorMessage>#message#</p>
+				</cfloop>
+				</cfoutput>
+			</cfif>
+			<dl>
+				<dt><label for="fld_Name">Новое имя</label></dt>
+				<dd><cfinput name="fld_Name" id="fld_Name" required="true" message="Введите новое имя в форме" validateAt="onSubmit" /></dd>
+				<dt><label for="fld_Last_name">Новая фамилия</label></dt>
+				<dd><cfinput name="fld_Last_name" id="fld_Last_name" required="true" message="Введите новую фамилию в форме" validateAt="onSubmit" /></dd>
+			</dl>
+			<input type="submit" name="fld_user_data_changeSubmit" id="fld_user_data_changeSubmit" value="Изменить данные" />
+		</fieldset>
+	</cfform>
+<cfelse>
+	<cfset allUsers = application.userService.get_all_users()/>
+	<table>
+		<cfif isDefined('session.stLoggedInUser.userID')>
+			<cfoutput query="allUsers">
+			  	<tr>
+					<td>#user_login#</td>
+					<td>#user_name#</td>
+					<td>#last_name#</td>
+					<td><a href="users.cfm?errorNumber=#id#">Изменить данные</a></td>
+			  	</tr>
+			</cfoutput>
+		<cfelse>
+			<cfoutput query="allUsers">
+			  	<tr>
+					<td>#user_login#</td>
+					<td>#user_name#</td>
+					<td>#last_name#</td>
+			  	</tr>
+			</cfoutput>
+		</cfif>
+	</table>
