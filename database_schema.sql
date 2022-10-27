@@ -20,8 +20,8 @@ short_desc nvarchar(60) NOT NULL,
 full_desc nvarchar(500) NOT NULL,
 user_id int NOT NULL,
 error_status nvarchar(10) NOT NULL,
-error_time_available nvarchar(15) NOT NULL,
-error_critical nvarchar(10) NOT NULL,
+error_time_available nvarchar(25) NOT NULL,
+error_critical nvarchar(25) NOT NULL,
 FOREIGN KEY (user_id) REFERENCES users(id)
 );
 

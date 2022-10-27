@@ -12,7 +12,7 @@
 	</cfoutput>
 <cfif IsDefined('session.stLoggedInUser')>
 	<cfoutput>
-	<p>Вы вошли как #session.stLoggedInUser.userFirstName#</p>
+	<p>Вы вошли как #session.stLoggedInUser.user_name#</p>
 	</cfoutput>
 <cfelse>
 	<cfform id="frm_comment" preservedata="true" >

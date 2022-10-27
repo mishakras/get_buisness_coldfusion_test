@@ -75,6 +75,7 @@
 	<cffunction name="get_all_errors" access="public" output="false" returntype="query">
 		<cfquery name="allErrors">
 			SELECT number
+			  ,user_id
 		      ,short_desc
 		      ,error_status
 		      ,error_time_available
@@ -149,5 +150,102 @@
 		</cftry>
 		<cfset arrayAppend(aErrorMessages, "Изменение статуса успешно завершено")/>	
 		<cfreturn aErrorMessages />
+	</cffunction>
+	<cffunction name="error_sort" access="public" output="false" returntype="query">
+		<cfargument name="all_errors" type="query" required="true" />
+		<cfargument name="type" type="string" required="true" />
+		<cfset allErrors_sorted = all_errors/>
+		<cfif type EQ "Number">
+			<cfscript>
+				allErrors_sorted.sort(function (c1,c2){
+		             return c1.number GT c2.number; 
+		       });
+			</cfscript>	
+		</cfif>
+		<cfif type EQ "Status">
+			<cfscript>
+				allErrors_sorted.sort(function (c1,c2){
+					var Order = "Новая,Открытая,Решенная,Закрытая";
+		            return listFindNoCase(Order,c1.error_status) - listFindNoCase(Order,c2.error_status); 
+		       });
+			</cfscript>	
+		</cfif>
+		<cfif type EQ "Time">
+			<cfscript>
+				allErrors_sorted.sort(function (c1,c2){
+					var Order = "Очень Срочно,Срочно,Несрочно,Совсем несрочно";
+		            return listFindNoCase(Order,c1.error_time_available) - listFindNoCase(Order,c2.error_time_available); 
+		       });
+			</cfscript>	
+		</cfif>
+		<cfif type EQ "Critical">
+			<cfscript>
+				allErrors_sorted.sort(function (c1,c2){
+					var Order = "Авария,Критичная,Некритичная,Запрос на изменение";
+		            return listFindNoCase(Order,c1.error_critical) - listFindNoCase(Order,c2.error_critical); 
+		       });
+			</cfscript>	
+		</cfif>
+		<cfreturn allErrors_sorted />
+	</cffunction>
+	<cffunction name="error_sort_status" access="public" output="false" returntype="integer">
+		<cfargument name="first" type="struct" required="true" />
+		<cfargument name="second" type="struct" required="true" />
+		<cfif first.error_status EQ "Новая">
+			<cfif second.error_status EQ "Открытая" OR second.error_status EQ "Решенная" OR second.error_status EQ "Закрытая">
+				<cfreturn 1/>
+			</cfif>
+		</cfif>
+		<cfif firs.error_statust EQ "Открытая">
+			<cfif second.error_status EQ "Решенная" OR second.error_status EQ "Закрытая">
+				<cfreturn 1/>
+			</cfif>
+		</cfif>
+		<cfif first.error_status EQ "Решенная">
+			<cfif second.error_status EQ "Закрытая">
+				<cfreturn 1/>
+			</cfif>
+		</cfif>
+		<cfreturn 0/>
+	</cffunction>
+	<cffunction name="error_sort_time" access="public" output="false" returntype="integer">
+		<cfargument name="first" type="struct" required="true" />
+		<cfargument name="second" type="struct" required="true" />
+		<cfif first.error_time_available EQ "Очень Срочно»">
+			<cfif second.error_time_available EQ "Срочно" OR second.error_time_available EQ "Несрочно" OR second.error_time_available EQ "Совсем несрочно">
+				<cfreturn 1/>
+			</cfif>
+		</cfif>
+		<cfif first.error_time_available EQ "Срочно">
+			<cfif second.error_time_available EQ "Несрочно" OR second.error_time_available EQ "Совсем несрочно">
+				<cfreturn 1/>
+			</cfif>
+		</cfif>
+		<cfif first.error_time_available EQ "Несрочно">
+			<cfif second.error_time_available EQ "Совсем несрочно">
+				<cfreturn 1/>
+			</cfif>
+		</cfif>
+		<cfreturn 0/>
+	</cffunction>
+	<cffunction name="error_sort_critical" access="public" output="false" returntype="integer">
+		<cfargument name="first" type="struct" required="true" />
+		<cfargument name="second" type="struct" required="true" />
+		<cfif first.error_critical EQ "Авария">
+			<cfif second.error_critical EQ "Критичная" OR second.error_critical EQ "Некритичная" OR second.error_critical EQ "Запрос на изменение">
+				<cfreturn 1/>
+			</cfif>
+		</cfif>
+		<cfif first.error_critical EQ "Критичная">
+			<cfif second.error_critical EQ "Некритичная" OR second.error_critical EQ "Запрос на изменение">
+				<cfreturn 1/>
+			</cfif>
+		</cfif>
+		<cfif first.error_critical EQ "Некритичная">
+			<cfif second.error_critical EQ "Запрос на изменение">
+				<cfreturn 1/>
+			</cfif>
+		</cfif>
+		<cfreturn 0/>
 	</cffunction>
 </cfcomponent>

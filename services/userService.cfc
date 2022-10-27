@@ -64,7 +64,7 @@
 		<cftry>
 			<cfquery name = "got_User">
 				SELECT id
-					  ,login
+					  ,user_login
 					  ,user_name
 					  ,last_name
 				FROM [get_buisness_coldfusion_test].[dbo].[users]
@@ -78,20 +78,46 @@
 		<cfif got_User.recordCount EQ 0>
 			<cfreturn 'Wrong login or password'/>
 		</cfif>
-		<cfset session.stLoggedInUser = {'user_name' = got_User.user_name, 'user_last_name' = got_User.last_name, 'userID' = got_User.id, 'user_login' = got_User.login} />
+		<cfset session.stLoggedInUser = {'user_name' = got_User.user_name, 'user_last_name' = got_User.last_name, 'userID' = got_User.id, 'user_login' = got_User.user_login} />
 		<cfreturn 'You logged in succsesfully'/>
 	</cffunction>
 	<cffunction name="doLogout" access="public" output="false" returntype="void">
 		<cfset structdelete(session,'stLoggedInUser') />
 	</cffunction>
 	<cffunction name="get_all_users" access="public" output="false" returntype="query">
-		<cfquery name="allUsers">
-			SELECT id 
-			  ,user_login
-		      ,user_name
-		      ,last_name
-		  	FROM [get_buisness_coldfusion_test].[dbo].[users]
-		</cfquery>
+		<cftry>
+			<cfquery name="allUsers">
+				SELECT id 
+				  ,user_login
+			      ,user_name
+			      ,last_name
+			  	FROM [get_buisness_coldfusion_test].[dbo].[users]
+			</cfquery>
+			<cfcatch type="database">
+				<cfreturn #cfcatch.queryError#/>
+	  		</cfcatch>
+		</cftry>
 		<cfreturn allUsers />
+	</cffunction>
+	<cffunction name="changeUser" access="public" output="false" returntype="array">
+		<cfargument name="user_name" type="string" required="true" />
+		<cfargument name="last_name" type="string" required="true" />
+		<cfset id_of_user = Val(session.stLoggedInUser.userID) />
+		<cfset var aErrorMessages = arrayNew(1)/>
+		<cftry>
+			<cfquery>
+				UPDATE [get_buisness_coldfusion_test].[dbo].[users] 
+				   SET user_name = <cfqueryparam value="#user_name#" cfsqltype="cf_sql_varchar"/>,
+					   last_name = <cfqueryparam value="#last_name#" cfsqltype="cf_sql_varchar"/>
+		  		WHERE users.id = <cfqueryparam value="#id_of_user#" cfsqltype="CF_SQL_INTEGER"/>
+			</cfquery>
+			<cfcatch type="database">
+				<cfset arrayAppend(aErrorMessages,#cfcatch.queryError#)/>
+				<cfreturn aErrorMessages />
+	  		</cfcatch>
+		</cftry>
+		<cfset session.stLoggedInUser = {'user_name' = user_name, 'user_last_name' = last_name, 'userID' = session.stLoggedInUser.userID, 'user_login' = session.stLoggedInUser.user_login} />
+		<cfset arrayAppend(aErrorMessages,"Change succsesfull") />
+		<cfreturn aErrorMessages />
 	</cffunction>
 </cfcomponent>

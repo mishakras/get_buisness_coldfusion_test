@@ -44,7 +44,7 @@
 			</tr>
 		</cfoutput>
 	</table>
-	<cfform id="frm_user_register">
+	<cfform id="frm_error_status_change">
 		<fieldset>
 			<legend>Изменение статуса ошибки</legend>
 			<cfif isDefined('variables.aErrorMessages') AND NOT arrayIsEmpty(variables.aErrorMessages)>
@@ -84,9 +84,42 @@
 	</table>
 <cfelse>
 	<cfset allErrors = application.errorService.get_all_errors()/>
+	<cfif isDefined('form.fld_error_numberSubmit')>
+		<cfset allErrors = application.errorService.error_sort(allErrors, "Number") />
+	</cfif>
+	<cfif isDefined('form.fld_error_statusSubmit')>
+		<cfset allErrors = application.errorService.error_sort(allErrors, "Status") />
+	</cfif>
+	<cfif isDefined('form.fld_error_time_availableSubmit')>
+		<cfset allErrors = application.errorService.error_sort(allErrors, "Time") />
+	</cfif>
+	<cfif isDefined('form.fld_error_criticalSubmit')>
+		<cfset allErrors = application.errorService.error_sort(allErrors, "Critical") />
+	</cfif>
+	<cfform id="frm_error_sort">
+		<fieldset>
+			<legend>Сортировка ошибок по</legend>
+			<tr>
+				<td>
+					<input type="submit" name="fld_error_numberSubmit" id="fld_error_numberSubmit" value="номеру ошибки" />
+				</td>
+				<td>
+					<input type="submit" name="fld_error_statusSubmit" id="fld_error_statusSubmit" value="статусу ошибки" />
+				</td>
+				<td>
+					<input type="submit" name="fld_error_time_availableSubmit" id="fld_error_time_availableSubmit" value="срочности ошибки" />
+				</td>
+				<td>
+					<input type="submit" name="fld_error_criticalSubmit" id="fld_error_criticalSubmit" value="критичности ошибки" />
+				</td>
+			</tr>
+		</fieldset>
+	</cfform>
 	<table>
 		<cfoutput query="allErrors">
 		  	<tr>
+		  		<td>#number#</td>
+				<td>#user_id#</td>
 				<td>#short_desc#</td>
 				<td>#error_status#</td>
 				<td>#error_time_available#</td>
