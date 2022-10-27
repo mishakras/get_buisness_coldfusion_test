@@ -13,6 +13,10 @@
 	</cfif>
 	<cfset error_and_history = application.errorService.get_error_by_number(url.errorNumber)/>
 	<table>
+		<tr>
+			<td><h3>Данные</h3></td>
+			<td><h3>Значение</h3></td>
+		</tr>
 		<cfoutput>
 			<tr>
 				<td>Номер ошибки</td>
@@ -74,11 +78,16 @@
 		</fieldset>
 	</cfform>
 	<table>
+		<tr>
+			<td><h3>Действие</h3></td>
+			<td><h3>Комментарий</h3></td>
+			<td><h3>Логин пользователя</h3></td>
+		</tr>
 		<cfoutput query="error_and_history">
 		  	<tr>
 				<td>#error_action#</td>
 				<td>#comment#</td>
-				<td>#user_id#</td>
+				<td>#users_login#</td>
 		  	</tr>
 		</cfoutput>
 	</table>
@@ -116,10 +125,17 @@
 		</fieldset>
 	</cfform>
 	<table>
+		<tr>
+			<td><h3>Номер</h3></td>
+			<td><h3>Краткое описание</h3></td>
+			<td><h3>Статус</h3></td>
+			<td><h3>Статус</h3></td>
+			<td><h3>Срочность</h3></td>
+			<td><h3>Критичность</h3></td>
+		</tr>
 		<cfoutput query="allErrors">
 		  	<tr>
 		  		<td>#number#</td>
-				<td>#user_id#</td>
 				<td>#short_desc#</td>
 				<td>#error_status#</td>
 				<td>#error_time_available#</td>

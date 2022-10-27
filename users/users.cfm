@@ -3,6 +3,11 @@
 </cfoutput>
 	<cfset allUsers = application.userService.get_all_users()/>
 	<table>
+		<tr>
+			<td><h3>Логин</h3></td>
+			<td><h3>Имя</h3></td>
+			<td><h3>Фамилия</h3></td>
+		</tr>
 		<cfoutput query="allUsers">
 		  	<tr>
 				<td>#user_login#</td>
@@ -11,6 +16,9 @@
 		  	</tr>
 		</cfoutput>
 	</table>
+	<p>
+		
+	</p>
 	<cfif isDefined('session.stLoggedInUser')>
 		<cfif isDefined('form.fld_user_data_changeSubmit')>
 			<cfset variables.aErrorMessages = application.userService.changeUser(form.fld_Name, form.fld_Last_name) />

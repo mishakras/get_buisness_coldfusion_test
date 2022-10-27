@@ -98,8 +98,10 @@
 		      ,error_history.error_action
 		      ,error_history.comment
 		      ,error_history.user_id
+		      ,users_login
 		  	FROM [get_buisness_coldfusion_test].[dbo].[errors] 
 		  	INNER JOIN [get_buisness_coldfusion_test].[dbo].[error_history] ON errors.number = error_history.error_id
+		  	INNER JOIN [get_buisness_coldfusion_test].[dbo].[users] ON error_history.user_id = users.id
 		  	WHERE errors.number = <cfqueryparam value="#int_error_number#" cfsqltype="CF_SQL_INTEGER"/>
 		</cfquery>
 		<cfreturn error_and_history />
